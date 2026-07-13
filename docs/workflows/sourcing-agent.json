@@ -1,0 +1,53 @@
+{
+  "name": "Sourcing Agent - Demo",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "new-job-requisition",
+        "httpMethod": "POST"
+      },
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "// Sanitized demo logic\n// Filters incoming job requisition data\nreturn items.map(item => ({\n  json: {\n    role: item.json.role || 'Sample Role',\n    location: item.json.location || 'Remote',\n    skills: item.json.skills || ['example-skill']\n  }\n}));"
+      },
+      "name": "Format Job Requirements",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "note": "Placeholder - connects to vector DB for semantic candidate matching in production version"
+      },
+      "name": "RAG Candidate Match (Demo Stub)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "note": "Placeholder - sends match results to Slack/ATS in production version"
+      },
+      "name": "Output Notification (Demo Stub)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [[{ "node": "Format Job Requirements", "type": "main", "index": 0 }]]
+    },
+    "Format Job Requirements": {
+      "main": [[{ "node": "RAG Candidate Match (Demo Stub)", "type": "main", "index": 0 }]]
+    },
+    "RAG Candidate Match (Demo Stub)": {
+      "main": [[{ "node": "Output Notification (Demo Stub)", "type": "main", "index": 0 }]]
+    }
+  }
+}
